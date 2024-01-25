@@ -1,61 +1,49 @@
-<!DOCTYPE html>
-<html lang="ru">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TestStandart</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-</head>
-<body>
-    <main>
-        <h1>Реквизиты</h1>
+{% extends 'base.html' %}
 
-        <table class="table table-bordered">
-            <thead>
-                <tr class="table-light">
-                    <th scope="col">Номер реквизита</th>
-                    <th scope="col">Тип платежа</th>
-                    <th scope="col">Тип карты/счета</th>
-                    <th scope="col">ФИО</th>
-                    <th scope="col">Номер телефона</th>
-                    <th scope="col">Лимит</th>
+{% block content %}
+    <h1>Реквизиты</h1>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr class="table-light">
+                <th scope="col">Номер реквизита</th>
+                <th scope="col">Тип платежа</th>
+                <th scope="col">Тип карты/счета</th>
+                <th scope="col">ФИО</th>
+                <th scope="col">Номер телефона</th>
+                <th scope="col">Лимит</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for requisite in object_list %}
+                <tr class="table-info">
+                    <th scope="row">{{ requisite.pk }}</td>
+                    <td>{{ requisite.payment_type }}</td>
+                    <td>{{ requisite.card_or_account_type }}</td>
+                    <td>{{ requisite.full_name }}</td>
+                    <td>{{ requisite.phone }}</td>
+                    <td>{{ requisite.limit }}</td>
                 </tr>
-            </thead>
-            <tbody>
-                {% for requisite in object_list %}
-                    <tr class="table-info">
-                        <th scope="row">{{ requisite.pk }}</td>
-                        <td>{{ requisite.payment_type }}</td>
-                        <td>{{ requisite.card_or_account_type }}</td>
-                        <td>{{ requisite.full_name }}</td>
-                        <td>{{ requisite.phone }}</td>
-                        <td>{{ requisite.limit }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        
-        
-        <nav>
-            <ul class="pagination">
-                {% if page_obj.has_previous %}
-                    <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
-                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">назад</a></li>
-                {% endif %}
-        
-                <li class="page-item"><span class="page-link">...</span></li>
-                <li class="page-item"><a class="page-link" href="#">{{ page_obj.number }}</a></li>
-                <li class="page-item"><span class="page-link">...</span></li>
-        
-                {% if page_obj.has_next %}
-                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">далее</a></li>
-                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-    </main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-  </body>
-</html>
-
-
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    
+    <nav>
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">назад</a></li>
+            {% endif %}
+    
+            <li class="page-item"><span class="page-link">...</span></li>
+            <li class="page-item"><a class="page-link" href="#">{{ page_obj.number }}</a></li>
+            <li class="page-item"><span class="page-link">...</span></li>
+    
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">далее</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endblock content %}
