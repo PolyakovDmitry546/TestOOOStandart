@@ -1,0 +1,11 @@
+<form action="{% url 'requisite-list-view' %}" method="get">
+    <input type="hidden" name="search_field" value="{{ header.name }}" />
+    {% if search_field and search_field == header.name %}
+        <input type="search" name="search_value" value="{{ search_value }}">
+    {% else %}
+        <input type="search" name="search_value">
+    {% endif %}
+    {% if ordering %}
+        <input type="hidden" name="ordering" value="{{ ordering }}">
+    {% endif %}
+</form>

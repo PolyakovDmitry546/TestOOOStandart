@@ -1,0 +1,16 @@
+
+<li class="page-item">
+    <form form action="{% url 'requisite-list-view' %}" method="get">
+        <input type="submit" class="page-link" value="{{ page_text }}">
+        <input type="hidden" name="page" value="{{ page_number }}" />
+        {% if ordering %}
+            <input type="hidden" name="ordering" value="{{ ordering }}">
+        {% endif %}
+        {% if search_field %}
+            <input type="hidden" name="search_field" value="{{ search_field }}">
+        {% endif %}
+        {% if search_value %}
+            <input type="hidden" name="search_value" value="{{ search_value }}">
+        {% endif %}
+    </form>
+</li>
