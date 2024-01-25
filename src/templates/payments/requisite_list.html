@@ -6,12 +6,27 @@
     <table class="table table-bordered">
         <thead>
             <tr class="table-light">
-                <th scope="col">Номер реквизита</th>
-                <th scope="col">Тип платежа</th>
-                <th scope="col">Тип карты/счета</th>
-                <th scope="col">ФИО</th>
-                <th scope="col">Номер телефона</th>
-                <th scope="col">Лимит</th>
+                {% for header in table_headers %}
+                    <th class="table-active" scope="col">
+                        {% if header.ordering in ordering %}
+                            {% if "-" in ordering %}
+                                <a href="?ordering={{ header.ordering }}">
+                                    {{ header.name }}
+                                </a>
+                                &#9660;
+                            {% else %}
+                                <a href="?ordering=-{{ header.ordering }}">
+                                    {{ header.name }}
+                                </a>
+                                &#9650;
+                            {% endif %}
+                        {% else %}
+                            <a href="?ordering={{ header.ordering }}">
+                                {{ header.name }}
+                            </a>
+                        {% endif %}
+                    </th>
+                {% endfor %}
             </tr>
         </thead>
         <tbody>
@@ -32,8 +47,8 @@
     <nav>
         <ul class="pagination">
             {% if page_obj.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">назад</a></li>
+                <li class="page-item"><a class="page-link" href="?page=1&ordering={{ ordering }}">1</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&ordering={{ ordering }}">назад</a></li>
             {% endif %}
     
             <li class="page-item"><span class="page-link">...</span></li>
@@ -41,8 +56,8 @@
             <li class="page-item"><span class="page-link">...</span></li>
     
             {% if page_obj.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">далее</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&ordering={{ ordering }}">далее</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&ordering={{ ordering }}">{{ page_obj.paginator.num_pages }}</a></li>
             {% endif %}
         </ul>
     </nav>
