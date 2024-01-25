@@ -7,16 +7,17 @@ from payments.models import Requisite
 class TableHeader:
     verbose_name: str
     name: str
+    column_size: str
 
 
 def get_requisite_table_headers():
     return [
-        TableHeader('Номер реквизита', 'id'),
-        TableHeader('Тип платежа', 'payment_type'),
-        TableHeader('Тип карты/счета', 'card_or_account_type'),
-        TableHeader('ФИО', 'full_name'),
-        TableHeader('Номер телефона', 'phone'),
-        TableHeader('Лимит', 'limit'),
+        TableHeader('Номер реквизита', 'id', '5%'),
+        TableHeader('Тип платежа', 'payment_type', '10%'),
+        TableHeader('Тип карты/счета', 'card_or_account_type', '15%'),
+        TableHeader('ФИО', 'full_name', '45%'),
+        TableHeader('Номер телефона', 'phone', '15%'),
+        TableHeader('Лимит', 'limit', '10%'),
     ]
 
 

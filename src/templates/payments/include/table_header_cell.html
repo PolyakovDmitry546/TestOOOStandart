@@ -1,17 +1,15 @@
 <th class="table-active" scope="col">
+    
     <form action="{% url 'requisite-list-view' %}" method="get">
         {% if header.name in ordering %}
             {% if "-" in ordering %}
-                <input type="hidden" name="ordering" value="{{ header.name }}" />
-                <input type="submit" value="&#9660; {{ header.verbose_name }}">
+                {% include "payments/include/table_header_cell_inputs.html" with sign="" arrow="&#9660;" %}
             {% else %}
-                <input type="hidden" name="ordering" value="-{{ header.name }}" />
-                <input type="submit" value="&#9650; {{ header.verbose_name }}">
+                {% include "payments/include/table_header_cell_inputs.html" with sign="-" arrow="&#9650;" %}
             {% endif %}
-                
         {% else %}
-            <input type="hidden" name="ordering" value="{{ header.name }}" />
-            <input type="submit" value="{{ header.verbose_name }}">
+            {% include "payments/include/table_header_cell_inputs.html" with sign="" arrow="" %}
+            </div>
         {% endif %}
         {% if search_field %}
             <input type="hidden" name="search_field" value="{{ search_field }}">
