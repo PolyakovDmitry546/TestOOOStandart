@@ -25,22 +25,5 @@
         </tbody>
     </table>
     
-    
-    <nav>
-        <ul class="pagination">
-            {% if page_obj.has_previous %}
-                {% include "payments/include/page_link.html" with page_number=1 page_text="1" %}
-                {% include "payments/include/page_link.html" with page_number=page_obj.previous_page_number page_text="назад" %}
-            {% endif %}
-    
-            <li class="page-item"><span class="page-link">...</span></li>
-            <li class="page-item"><a class="page-link" href="#">{{ page_obj.number }}</a></li>
-            <li class="page-item"><span class="page-link">...</span></li>
-    
-            {% if page_obj.has_next %}
-                {% include "payments/include/page_link.html" with page_number=page_obj.next_page_number page_text="далее" %}
-                {% include "payments/include/page_link.html" with page_number=page_obj.paginator.num_pages page_text=page_obj.paginator.num_pages %}
-            {% endif %}
-        </ul>
-    </nav>
+    {% include "payments/include/pagination.html" %}
 {% endblock content %}
