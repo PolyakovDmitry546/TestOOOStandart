@@ -7,7 +7,7 @@ from payments.models import Invoice, Requisite
 
 class InvoiceListView(ListView):
     model = Invoice
-    paginate_by = 5
+    paginate_by = 50
 
     def get_queryset(self) -> QuerySet[Any]:
         return Invoice.objects.all().order_by('id').select_related('requisite')
