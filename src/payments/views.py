@@ -3,10 +3,12 @@ from typing import Any
 
 from django.db.models.query import QuerySet
 from django.forms import ValidationError
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.views.generic.list import ListView
 
 from payments.models import Invoice, Requisite
+from payments.serializers import RequisiteAjaxResponseSerializer
+from payments.services import RequisiteService
 from payments.utils import (
     get_requisite_table_headers,
     get_requisite_model_fields,
@@ -25,6 +27,7 @@ class RequisiteListView(ListView):
     model = Requisite
     paginate_by = 50
     ordering = 'id'
+    service = RequisiteService()
 
     def validate_query_params(self):
         ordering = self.request.GET.get('ordering')
@@ -47,6 +50,13 @@ class RequisiteListView(ListView):
             self.validate_query_params()
         except ValidationError as e:
             return HttpResponseNotFound(content=e.message)
+
+        if self.is_ajax():
+            context = self.get_context_data(object_list=self.get_queryset())
+            response_data = self.service.get_ajax_response(context)
+            serializer = RequisiteAjaxResponseSerializer(response_data)
+            return JsonResponse(serializer.data, safe=False)
+
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self) -> QuerySet[Any]:
@@ -85,3 +95,6 @@ class RequisiteListView(ListView):
 
     def get_search_value(self) -> str | None:
         return self.request.GET.get('search_value')
+
+    def is_ajax(self) -> bool:
+        return self.request.headers.get('x-requested-with') == 'XMLHttpRequest'
