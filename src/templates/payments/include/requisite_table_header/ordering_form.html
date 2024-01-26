@@ -1,0 +1,18 @@
+<form id="ordering-form-{{ header.name }}" action="{% url 'requisite-list-view' %}" class="ordering-form">
+    {% if header.name in ordering %}
+        {% if "-" in ordering %}
+            {% include "payments/include/requisite_table_header/ordering_inputs.html" with sign="" arrow="&#9660;" %}
+        {% else %}
+            {% include "payments/include/requisite_table_header/ordering_inputs.html" with sign="-" arrow="&#9650;" %}
+        {% endif %}
+    {% else %}
+        {% include "payments/include/requisite_table_header/ordering_inputs.html" with sign="" arrow="" %}
+        </div>
+    {% endif %}
+    {% if search_field %}
+        <input type="hidden" name="search_field" value="{{ search_field }}">
+    {% endif %}
+    {% if search_value %}
+        <input type="hidden" name="search_value" value="{{ search_value }}">
+    {% endif %}
+</form>

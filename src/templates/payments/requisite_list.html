@@ -3,26 +3,28 @@
 {% block content %}
     <h1>Реквизиты</h1>
 
-    <table class="table table-bordered">
-        <thead>
-            <tr class="table-light">
-                {% for header in table_headers %}
-                    {% include "payments/include/table_header_cell.html" %}
-                {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for requisite in object_list %}
-                <tr class="table-info">
-                    <th scope="row">{{ requisite.pk }}</td>
-                    <td>{{ requisite.payment_type }}</td>
-                    <td>{{ requisite.card_or_account_type }}</td>
-                    <td>{{ requisite.full_name }}</td>
-                    <td>{{ requisite.phone }}</td>
-                    <td>{{ requisite.limit }}</td>
+    <table class="table table-bordered" id="requisite-table">
+        <search>
+            <thead id="requisite-table-head">
+                <tr class="table-light">
+                    {% for header in table_headers %}
+                        {% include "payments/include/requisite_table_header/cell.html" %}
+                    {% endfor %}
                 </tr>
-            {% endfor %}
-        </tbody>
+            </thead>
+            <tbody id="requisite-table-body">
+                {% for requisite in object_list %}
+                    <tr class="table-info">
+                        <th scope="row">{{ requisite.pk }}</td>
+                        <td>{{ requisite.payment_type }}</td>
+                        <td>{{ requisite.card_or_account_type }}</td>
+                        <td>{{ requisite.full_name }}</td>
+                        <td>{{ requisite.phone }}</td>
+                        <td>{{ requisite.limit }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </search>
     </table>
     
     {% include "payments/include/pagination.html" %}
