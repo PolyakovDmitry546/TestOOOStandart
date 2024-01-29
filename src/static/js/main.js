@@ -96,6 +96,21 @@ function updateTableData(requisiteList) {
     table.replaceChild(tBody, oldTBody);
 }
 
+function clearUnusedOrderingDirection(usedDirection) {
+    const tableHead = document.getElementById("requisite-table-head");
+    const orderingForms = tableHead.getElementsByClassName("ordering-form");
+    for (let form of orderingForms) {
+        if (usedDirection !== getNewOrderingFromForm(form)) {
+            console.log(usedDirection);
+            console.log(getNewOrderingFromForm(form));
+            let submit = getOrderingSubmit(form);
+            if (submit.value.startsWith( "▼") || submit.value.startsWith("▲")) {
+                submit.value = submit.value.slice(1);
+            }
+        }
+    }
+}
+
 async function orderingFormSubmit(event) {
     event.preventDefault();
     const form = event.target;
@@ -105,6 +120,7 @@ async function orderingFormSubmit(event) {
     const requestUrl = getRequestUrl(form);
     const responseData = await sendRequest(requestUrl);
     updateOrderingFormInputs(form, ordering);
+    clearUnusedOrderingDirection(getNewOrderingFromForm(form));
     updateTableData(responseData.object_list);
     //updateNavigation(response_data)
 }
