@@ -109,6 +109,38 @@ async function orderingFormSubmit(event) {
     //updateNavigation(response_data)
 }
 
+function getSearchField(form) {
+    return form.elements["search_field"].value;
+}
+
+function getSearchValue(form) {
+    return form.elements["search_value"].value;
+}
+
+function clearUnusedSearchInputs(usedInputName) {
+    const tableHead = document.getElementById("requisite-table-head");
+    const searchForms = tableHead.getElementsByClassName("search-form");
+    for (let form of searchForms) {
+        if (usedInputName !== getSearchField(form)) {
+            form.elements["search_value"].value = "";
+        }
+    }
+}
+
+async function searchFormSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const searchField = getSearchField(form);
+    const searchValue = getSearchValue(form);
+    requisiteTableFilterParameters.set("search_field", searchField);
+    requisiteTableFilterParameters.set("search_value", searchValue);
+    const requestUrl = getRequestUrl(form);
+    const responseData = await sendRequest(requestUrl);
+    clearUnusedSearchInputs(searchField);
+    updateTableData(responseData.object_list);
+    //updateNavigation(response_data)
+}
+
 function getFilterParameterFromQuery(paramName) {
     const query_params = new URLSearchParams(window.location.search);
     if (query_params.has(paramName) && query_params.get(paramName).length > 0) {
@@ -128,4 +160,8 @@ const tableHead = document.getElementById("requisite-table-head");
 const orderingForms = tableHead.getElementsByClassName("ordering-form");
 for (let form of orderingForms) {
     form.addEventListener("submit", orderingFormSubmit);
+}
+const searchForms = tableHead.getElementsByClassName("search-form");
+for (let form of searchForms) {
+    form.addEventListener("submit", searchFormSubmit);
 }

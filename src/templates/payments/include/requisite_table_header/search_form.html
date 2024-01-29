@@ -1,4 +1,4 @@
-<form id="search-form-{{ header.name }}" action="{% url 'requisite-list-view' %}" method="get">
+<form id="search-form-{{ header.name }}" action="{% url 'requisite-list-view' %}" method="get" class="search-form">
     <input type="hidden" name="search_field" value="{{ header.name }}" />
     {% if search_field and search_field == header.name %}
         <input type="search" class="form-control" name="search_value" value="{{ search_value }}">
