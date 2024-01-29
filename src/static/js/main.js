@@ -101,8 +101,6 @@ function clearUnusedOrderingDirection(usedDirection) {
     const orderingForms = tableHead.getElementsByClassName("ordering-form");
     for (let form of orderingForms) {
         if (usedDirection !== getNewOrderingFromForm(form)) {
-            console.log(usedDirection);
-            console.log(getNewOrderingFromForm(form));
             let submit = getOrderingSubmit(form);
             if (submit.value.startsWith( "▼") || submit.value.startsWith("▲")) {
                 submit.value = submit.value.slice(1);
