@@ -112,15 +112,15 @@ function clearUnusedOrderingDirection(usedDirection) {
 async function orderingFormSubmit(event) {
     event.preventDefault();
     const form = event.target;
-    
     let ordering = getNewOrderingFromForm(form);
     requisiteTableFilterParameters.set("ordering", ordering);
+    requisiteTableFilterParameters.set("page", null);
     const requestUrl = getRequestUrl(form);
     const responseData = await sendRequest(requestUrl);
     updateOrderingFormInputs(form, ordering);
     clearUnusedOrderingDirection(getNewOrderingFromForm(form));
     updateTableData(responseData.object_list);
-    //updateNavigation(response_data)
+    updateNavigation(responseData)
 }
 
 function getSearchField(form) {
@@ -148,11 +148,71 @@ async function searchFormSubmit(event) {
     const searchValue = getSearchValue(form);
     requisiteTableFilterParameters.set("search_field", searchField);
     requisiteTableFilterParameters.set("search_value", searchValue);
+    requisiteTableFilterParameters.set("page", null);
     const requestUrl = getRequestUrl(form);
     const responseData = await sendRequest(requestUrl);
     clearUnusedSearchInputs(searchField);
     updateTableData(responseData.object_list);
-    //updateNavigation(response_data)
+    updateNavigation(responseData)
+}
+
+function getPageValueFromPaginationForm(form) {
+    return form.elements["page"].value;
+}
+
+async function paginationFormSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const page = getPageValueFromPaginationForm(form);
+    requisiteTableFilterParameters.set("page", page);
+    const requestUrl = getRequestUrl(form);
+    const responseData = await sendRequest(requestUrl);
+    updateTableData(responseData.object_list);
+    updateNavigation(responseData);
+}
+
+function createPaginationItem(pageText, pageNumber) {
+    const li = document.createElement("li");
+    li.classList.add("page-item");
+    const pageForm = document.createElement("form");
+    pageForm.action = window.location.pathname;
+    pageForm.method = "get";
+    pageForm.addEventListener("submit", paginationFormSubmit);
+    const submit = document.createElement("input");
+    submit.type = "submit";
+    submit.classList.add("page-link");
+    submit.value = pageText;
+    const hidden = document.createElement("input");
+    hidden.type = "hidden";
+    hidden.name = "page";
+    hidden.value = pageNumber;
+    pageForm.append(submit, hidden);
+    li.append(pageForm);
+    return li;
+}
+
+function updateNavigation(data) {
+    const oldUl = paginationNavbar.getElementsByTagName("ul")[0];
+    const newUl = document.createElement("ul");
+    newUl.classList.add("pagination");
+    if (data.has_other_pages) {
+        if (data.has_previos) {
+            newUl.append(createPaginationItem("«", 1));
+            newUl.append(createPaginationItem("назад", data.page - 1));
+        }
+        const li = document.createElement("li");
+        li.classList.add("page-item");
+        const span = document.createElement("span");
+        span.classList.add("page-link");
+        span.textContent = data.page + " из " + data.num_pages;
+        li.append(span);
+        newUl.append(li);
+        if (data.has_next) {
+            newUl.append(createPaginationItem("далее", data.page + 1));
+            newUl.append(createPaginationItem("»", data.num_pages));
+        }
+    }
+    paginationNavbar.replaceChild(newUl, oldUl);
 }
 
 function getFilterParameterFromQuery(paramName) {
@@ -178,4 +238,10 @@ for (let form of orderingForms) {
 const searchForms = tableHead.getElementsByClassName("search-form");
 for (let form of searchForms) {
     form.addEventListener("submit", searchFormSubmit);
+}
+
+const paginationNavbar = document.getElementById("pagination-navbar");
+const paginationForms = paginationNavbar.getElementsByTagName("form");
+for (let form of paginationForms) {
+    form.addEventListener("submit", paginationFormSubmit);
 }
