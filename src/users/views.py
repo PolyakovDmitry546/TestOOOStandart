@@ -1,0 +1,20 @@
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+from django.http import HttpResponse
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
+
+from users.models import UserRole
+
+
+class RegisterView(CreateView):
+    model = User
+    template_name = 'registration/register.html'
+    success_url = reverse_lazy('requisite-list-view')
+    form_class = UserCreationForm
+
+    def form_valid(self, form) -> HttpResponse:
+        response = super().form_valid(form)
+        user_role = UserRole(user=self.object, role=UserRole.USER)
+        user_role.save()
+        return response
