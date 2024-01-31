@@ -1,6 +1,7 @@
 from collections.abc import Sequence
 from typing import Any
 
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models.query import QuerySet
 from django.forms import ValidationError
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
@@ -13,17 +14,21 @@ from payments.utils import (
     get_requisite_table_headers,
     get_requisite_model_fields,
 )
+from users.services import UserService
 
 
-class InvoiceListView(ListView):
+class InvoiceListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Invoice
     paginate_by = 50
+
+    def test_func(self) -> bool:
+        return UserService().is_admin(self.request.user)
 
     def get_queryset(self) -> QuerySet[Any]:
         return Invoice.objects.all().order_by('id').select_related('requisite')
 
 
-class RequisiteListView(ListView):
+class RequisiteListView(LoginRequiredMixin, ListView):
     model = Requisite
     paginate_by = 50
     ordering = 'id'
