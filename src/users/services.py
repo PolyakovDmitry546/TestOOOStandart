@@ -16,3 +16,6 @@ class UserService:
         except UserRole.DoesNotExist:
             return False
         return user_role.role == UserRole.ADMIN
+
+    def get_all_user_roles(self):
+        return UserRole.objects.all().order_by('id').select_related('user')

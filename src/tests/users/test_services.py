@@ -37,3 +37,15 @@ class TestUserService(TestCase):
         self.assertTrue(service.is_admin(admin_user))
         self.assertFalse(service.is_admin(not_admin_user))
         self.assertFalse(service.is_admin(user_without_role))
+
+    def test_get_all_user_roles(self):
+        user = User.objects.create_user('user')
+        admin = User.objects.create_user('admin')
+        UserRole.objects.create(user=user, role=UserRole.USER)
+        UserRole.objects.create(user=admin, role=UserRole.ADMIN)
+        expected_roles = UserRole.objects.all().order_by('id')
+
+        user_roles = UserService().get_all_user_roles()
+
+        self.assertQuerySetEqual(user_roles,
+                                 expected_roles)
