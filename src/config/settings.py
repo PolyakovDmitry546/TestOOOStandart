@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django_seed',
 
     'payments',
+    'users',
 ]
 
 MIDDLEWARE = [
