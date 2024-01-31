@@ -25,3 +25,15 @@ class TestUserService(TestCase):
 
         with self.assertRaises(Exception):
             service.add_role(user, 'sdsd')
+
+    def test_is_admin(self):
+        service = UserService()
+        not_admin_user = User.objects.create_user(username='not_admin_user')
+        admin_user = User.objects.create_user(username='admin')
+        user_without_role = User.objects.create_user(username='anonymus')
+        service.add_role(admin_user, UserRole.ADMIN)
+        service.add_role(not_admin_user, UserRole.USER)
+
+        self.assertTrue(service.is_admin(admin_user))
+        self.assertFalse(service.is_admin(not_admin_user))
+        self.assertFalse(service.is_admin(user_without_role))

@@ -10,3 +10,9 @@ class UserService:
             raise ValueError(f'illegal role argument role={role}')
         UserRole.objects.create(user=user, role=role)
 
+    def is_admin(self, user: User) -> bool:
+        try:
+            user_role = UserRole.objects.get(user=user)
+        except UserRole.DoesNotExist:
+            return False
+        return user_role.role == UserRole.ADMIN
