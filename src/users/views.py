@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
 from users.models import UserRole
+from users.services import UserService
 
 
 class RegisterView(CreateView):
@@ -15,6 +16,6 @@ class RegisterView(CreateView):
 
     def form_valid(self, form) -> HttpResponse:
         response = super().form_valid(form)
-        user_role = UserRole(user=self.object, role=UserRole.USER)
-        user_role.save()
+        service = UserService()
+        service.add_role(self.object, UserRole.USER)
         return response
