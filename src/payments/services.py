@@ -25,7 +25,11 @@ class InvoiceService:
             requisite = Requisite.objects.get(id=requisite_id)
         except Requisite.DoesNotExist:
             raise ValueError(f'Requisite with id={requisite_id} does not exist')
-        invoice = Invoice(requisite=requisite, amount=amount)
+        invoice = Invoice(
+            requisite=requisite,
+            amount=amount,
+            status=Invoice.AWAITING_PAYMENT
+        )
         invoice.save()
         invoice_id = invoice.pk
 
