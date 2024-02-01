@@ -1,4 +1,8 @@
+from decimal import Decimal
+
 from django.core.paginator import Page
+
+from payments.models import Invoice, Requisite
 
 
 class RequisiteService:
@@ -13,3 +17,16 @@ class RequisiteService:
             'num_pages': page_obj.paginator.num_pages,
         }
         return response_data
+
+
+class InvoiceService:
+    def create_invoice(self, requisite_id: int, amount: Decimal) -> tuple[int, Requisite]:
+        try:
+            requisite = Requisite.objects.get(id=requisite_id)
+        except Requisite.DoesNotExist:
+            raise ValueError(f'Requisite with id={requisite_id} does not exist')
+        invoice = Invoice(requisite=requisite, amount=amount)
+        invoice.save()
+        invoice_id = invoice.pk
+
+        return (invoice_id, requisite)
