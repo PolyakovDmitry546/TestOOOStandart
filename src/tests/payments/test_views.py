@@ -3,7 +3,8 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from payments.models import Requisite
+from payments.models import Invoice, Requisite
+from payments.services import InvoiceService
 
 
 class TestCreateInvoiceView(APITestCase):
@@ -51,5 +52,38 @@ class TestCreateInvoiceView(APITestCase):
                 'amount': 123,
             },
             format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class TestGetInvoiceStatusView(APITestCase):
+    def setUp(self) -> None:
+        self.requisite = Requisite.objects.create(
+            payment_type=Requisite.CARD,
+            card_or_account_type='some type',
+            full_name='Some Name',
+            phone='81113331122',
+            limit=100
+        )
+        return super().setUp()
+
+    def test_get_invoice_status(self):
+        service = InvoiceService()
+        (invoice_id, _) = service.create_invoice(self.requisite.pk, 5)
+        expected_invoice_status = Invoice.AWAITING_PAYMENT
+
+        response = self.client.get(
+            path=reverse('get-invoice-status-api-view'),
+            data={'invoice_id': invoice_id}
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response_data = response.json()
+        self.assertEqual(response_data['status'], expected_invoice_status)
+
+    def test_get_invoice_status_incorrect_data(self):
+        response = self.client.get(
+            path=reverse('get-invoice-status-api-view'),
+            data={'invoice_id': 4}
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

@@ -34,3 +34,10 @@ class InvoiceService:
         invoice_id = invoice.pk
 
         return (invoice_id, requisite)
+
+    def get_invoice_status(self, invoice_id: int) -> str:
+        try:
+            invoice = Invoice.objects.get(id=invoice_id)
+        except Invoice.DoesNotExist:
+            raise ValueError(f'Invoice with id={invoice_id} does not exist')
+        return invoice.status
