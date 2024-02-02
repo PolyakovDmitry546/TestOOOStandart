@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'phonenumber_field',
     'django_seed',
+    'drf_spectacular',
 
     'payments',
     'users',
@@ -135,3 +136,13 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/users/login/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Payments API',
+    'VERSION': '0.0.1',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
