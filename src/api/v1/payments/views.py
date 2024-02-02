@@ -1,15 +1,28 @@
 from rest_framework import status
-
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from api.v1.payments.serializers import (CreateInvoiceOutSerializer,
-                                         GetInvoiceStatusOutSerializer)
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+
+
+from api.v1.payments.serializers import (
+    CreateInvoiceOutSerializer, CreateInvoiceSerializer, ErrorSerializer,
+    GetInvoiceStatusOutSerializer)
 from payments.services import InvoiceService
 
 
+@extend_schema(tags=['Invoices'])
 class CreateInvoiceAPIView(APIView):
+    @extend_schema(
+        summary='Создание заявки на оплату',
+        request=CreateInvoiceSerializer,
+        responses={
+            status.HTTP_201_CREATED: CreateInvoiceOutSerializer,
+            status.HTTP_400_BAD_REQUEST: ErrorSerializer,
+            status.HTTP_500_INTERNAL_SERVER_ERROR: ErrorSerializer
+        }
+    )
     def post(self, request: Request):
         serializer = CreateInvoiceSerializer(data=request.data)
         if serializer.is_valid():
@@ -39,7 +52,21 @@ class CreateInvoiceAPIView(APIView):
                 status.HTTP_400_BAD_REQUEST)
 
 
+@extend_schema(tags=['Invoices'])
 class GetInvoiceStatusAPIView(APIView):
+    @extend_schema(
+        summary='Получение статуса заявки на оплату',
+        parameters=[
+            OpenApiParameter(
+                name='invoice_id',
+                type=int, required=True)
+        ],
+        responses={
+            status.HTTP_200_OK: GetInvoiceStatusOutSerializer,
+            status.HTTP_400_BAD_REQUEST: ErrorSerializer,
+            status.HTTP_500_INTERNAL_SERVER_ERROR: ErrorSerializer
+        }
+    )
     def get(self, request: Request):
         invoice_id = request.query_params.get('invoice_id')
         if invoice_id is None:
