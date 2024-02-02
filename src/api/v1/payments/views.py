@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from api.v1.payments.serializers import (CreateInvoiceOutSerializer,
-                                         CreateInvoiceSerializer)
+                                         GetInvoiceStatusOutSerializer)
 from payments.services import InvoiceService
 
 
@@ -40,7 +40,11 @@ class GetInvoiceStatusAPIView(APIView):
             return Response(status.HTTP_400_BAD_REQUEST)
         try:
             invoice_status = InvoiceService().get_invoice_status(invoice_id)
-            return Response({'status': invoice_status})
+            return Response(
+                GetInvoiceStatusOutSerializer(
+                    {'invoice_status': invoice_status}
+                ).data,
+                status=status.HTTP_200_OK)
         except ValueError as e:
             return Response(e.args, status=status.HTTP_400_BAD_REQUEST)
         except Exception:

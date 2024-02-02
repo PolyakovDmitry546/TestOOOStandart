@@ -17,3 +17,8 @@ class RequisiteSerializer(serializers.ModelSerializer):
 class CreateInvoiceOutSerializer(serializers.Serializer):
     invoice_id = serializers.IntegerField()
     requisite = RequisiteSerializer()
+
+
+class GetInvoiceStatusOutSerializer(serializers.Serializer):
+    invoice_status = serializers.CharField()
+
