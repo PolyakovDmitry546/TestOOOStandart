@@ -22,3 +22,6 @@ class CreateInvoiceOutSerializer(serializers.Serializer):
 class GetInvoiceStatusOutSerializer(serializers.Serializer):
     invoice_status = serializers.CharField()
 
+
+class ErrorSerializer(serializers.Serializer):
+    message = serializers.CharField()

@@ -26,18 +26,28 @@ class CreateInvoiceAPIView(APIView):
                 return Response(out_serializer.data,
                                 status=status.HTTP_201_CREATED)
             except ValueError as e:
-                return Response(e.args, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    ErrorSerializer({'message': " ".join(e.args)}).data,
+                    status=status.HTTP_400_BAD_REQUEST)
             except Exception:
-                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return Response(
+                    ErrorSerializer({'message': " "}).data,
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
-            return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {'message': " ".join(serializer.errors)},
+                status.HTTP_400_BAD_REQUEST)
 
 
 class GetInvoiceStatusAPIView(APIView):
     def get(self, request: Request):
         invoice_id = request.query_params.get('invoice_id')
         if invoice_id is None:
-            return Response(status.HTTP_400_BAD_REQUEST)
+            return Response(
+                ErrorSerializer(
+                    {'message': 'Required parameter invoice_id was not sent'}
+                ).data,
+                status.HTTP_400_BAD_REQUEST)
         try:
             invoice_status = InvoiceService().get_invoice_status(invoice_id)
             return Response(
@@ -46,6 +56,10 @@ class GetInvoiceStatusAPIView(APIView):
                 ).data,
                 status=status.HTTP_200_OK)
         except ValueError as e:
-            return Response(e.args, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                ErrorSerializer({'message': " ".join(e.args)}).data,
+                status=status.HTTP_400_BAD_REQUEST)
         except Exception:
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                ErrorSerializer({'message': " "}).data,
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
