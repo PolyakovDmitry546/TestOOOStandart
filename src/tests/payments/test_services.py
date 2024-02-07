@@ -49,4 +49,4 @@ class TestInvoiceService(TestCase):
         service = InvoiceService()
         service.create_invoice(self.requisite.pk, 5)
         with self.assertRaises(ValueError):
-            service.get_invoice_status(3)
+            service.get_invoice_status(100)

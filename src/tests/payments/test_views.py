@@ -79,7 +79,7 @@ class TestGetInvoiceStatusView(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response_data = response.json()
-        self.assertEqual(response_data['status'], expected_invoice_status)
+        self.assertEqual(response_data['invoice_status'], expected_invoice_status)
 
     def test_get_invoice_status_incorrect_data(self):
         response = self.client.get(
