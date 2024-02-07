@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block content %}
     <h1>Реквизиты</h1>
 
@@ -28,4 +30,6 @@
     </table>
     
     {% include "payments/include/pagination.html" %}
+
+    <script type="module" src="{% static 'js/main.js' %}"></script>
 {% endblock content %}
