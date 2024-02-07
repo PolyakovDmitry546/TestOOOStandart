@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div>
+    <ul>
+        <li><h5>Таблицы</h5></li>
+        <ul>
+            <li><a href="{% url 'invoice-list-view' %}">{% url 'invoice-list-view' %} - Таблица с заявками на оплату</a></li>
+            <li><a href="{% url 'requisite-list-view' %}">{% url 'requisite-list-view' %} - Таблица с реквизитами</a></li>
+            <li><a href="{% url 'user-role-list-view' %}">{% url 'user-role-list-view' %} - Таблица с ролями пользователей</a></li>
+        </ul>
+        <li><h5>API</h5></li>
+        <li>
+            <ul>
+                <li><a href="{% url 'create-invoice-api-view' %}">{% url 'create-invoice-api-view' %} - Метод создания заявки на оплату</a></li>
+                <li><a href="{% url 'get-invoice-status-api-view' %}">{% url 'get-invoice-status-api-view' %} - Метод получения статуса заявки</a></li>
+            </ul>
+        </li>
+        <li><h5>Документация</h5></li>
+        <li>
+            <ul>
+                <li><a href="/api/docs/">/api/docs/</a></li>
+                <li><a href="/api/redoc/">/api/redoc/</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+{% endblock content %}
